@@ -2,16 +2,16 @@
 
 Response functions to provide text, JSON, and empty responses in Express JS
 
-## Quick Start: Basic Use, as Middleware Functions:
+## Quick Start: Basic Use as Middleware Functions:
 
 ```javascript
 // Import the needed middleware functions:
 const { Ok200, NotFound404, Unauthorized401 } = require('responsify-express');
 
-// Next pass strings to the functions to send the strings as strings:
+// Pass strings to the functions to send them as strings:
 app.get('/', Ok200('<p>Welcome to the very short homepage</p>'));
 
-// Or send objects (or arrays) as JSON:
+// Or pass objects (or arrays) to send as JSON:
 app.get('/settings', Ok200(mySettingsObject));
 
 // Or send empty responses by executing the functions with no arguments:
@@ -23,7 +23,7 @@ app.get('/admin', Unauthorized401);
 ***
 ## Quick Start: Basic Use as Response Functions:
 
-Import '`responsify`' and then '`app.use`' it before any routes that will use the response functions:
+Import `responsify` and then `app.use` it before any routes that need the response functions:
 ```javascript
 const { responsify } = require('responsify-express');
 
@@ -31,7 +31,7 @@ app.use(responsify);
 
 app.get('/settings', mySettingsRoute);
 ```
-Then, in the route, you'll find the functions available on the '`res`' object...
+Then, in the route, you'll find the functions available on the `res` object...
 ```javascript
 function mySettingsRoute(req, res, next) {
 
@@ -64,9 +64,9 @@ function mySettingsRoute(req, res, next) {
 * ### `InternalError500()`
 * ### `ServiceUnavailable503()`
 ***
-## API Details - Adding Functions to the '`response`' Object:
+## API Details - Adding Functions to the `response` Object:
 
-When '`responsify`' is used as Express middleware, it imports and adds the entire set of functions to the '`response`' object:
+When `responsify` is used as Express middleware, it  adds the entire set of functions to the `response` object:
 ```javascript
 const { responsify } = require('responsify-express');
 
@@ -80,18 +80,30 @@ Functions added to the response object take the form `MessageDescription###`, wh
 * `payload` is an optional payload to be sent
 
 ### For optional `payload`:
-* If `payload` is an object or array (evaluated using `typeof payload === 'object'`), then it is sent as JSON using `res.json(payload)`.
+* If `payload` is an object or array (evaluated using `typeof payload === 'object`), then it is sent as JSON using `res.json(payload)`.
 * If `payload` is falsey, then an empty response is sent using `res.end()`.
 * Otherwise, the value is sent as a string using `res.send(String(payload))`. (Non-string forms are thus coerced into strings.)
 
-**Note:** When used from the '`res`' response object, **the functions must be executed to work**.
+**Note:** When used from the `res` response object, **the functions must be executed to work**.  (See examples below)
 
+### Examples:
 ```javascript
 function myRoute(req, res, next) {
-   res.NotFound404("Not found"); //These both
-   res.NotFound404();            //work.
+    
+    if (!req.body.name) res.BadRequest400('No name specified');
+   
+    res.Ok200('Request received');    // Send a plain string
+    res.Ok200({newName: 'Gertrude'}); // Send an object as JSON
+    res.Ok200([user1, user2, user3]); // Send an array as JSON
 
-   res.NotFound404; //doesn't work!
+    res.NotFound404('Content not found'); // Add error message
+    res.NotFound404({err: caughtError}); // Add error object
+    
+    res.NotFound404(""); //These both send empty responses with
+    res.NotFound404();   //a 404 status code.
+
+    res.NotFound404; //doesn't work! (works only when used as middleware)
+
 }
 ```
 
@@ -101,7 +113,7 @@ function myRoute(req, res, next) {
 Each function must be imported:
 
 ```javascript
-const { Ok200, BadRequest400, NotFound404 } = require('responsify-express');
+const { Ok200, BadRequest400, Unauthorized401, NotFound404 } = require('responsify-express');
 ```
 Functions can then be passed to Express's `app.METHOD`, `router.METHOD`, `app.use`, etc. functions, to give quick in-line responses:
 
@@ -114,7 +126,26 @@ Functions can then be passed to Express's `app.METHOD`, `router.METHOD`, `app.us
 ```javascript
 // These are equivalent:
 app.get('/', NotFound404());
-app.get('/', NotFound404); //works here!
+app.get('/', NotFound404); //works here, if no response content is required
+```
+
+### Examples:
+```javascript
+const app = express();
+
+    // Settings Routes:
+    app.get('/settings', getSettings);
+    app.post('/settings', Unauthorized401('Not logged in'));
+
+    app.get('/adminsettings', Unauthorized401('Not available!'));
+
+    // Home page
+    app.get('/', homepage);
+
+    // Last resort:
+    app.use(NotFound404('Page not found'));
+
+app.listen(3000,()=>console.log("Listening..."));
 ```
 
 ***
@@ -174,4 +205,4 @@ app.get('/', NotFound404); //works here!
 * `InsufficientStorage507`
 * `LoopDetected508`
 * `NotExtended510`
-* `NetworkAuthRequire511`
+* `NetworkAuthRequired511`
