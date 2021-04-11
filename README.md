@@ -21,7 +21,7 @@ app.get('/unimplemented', NotFound404())
 app.get('/admin', Unauthorized401);
 ```
 ***
-## Quick Start: Basic Use in Route Definitions:
+## Quick Start: Basic Use as Response Functions:
 
 Import '`responsify`' and then '`app.use`' it before any routes that will use the response functions:
 ```javascript
@@ -50,6 +50,19 @@ function mySettingsRoute(req, res, next) {
 
 }
 ```
+***
+## Quick Start: Functions Names for the Most Common Responses:
+* ### `Ok200`
+* ### `Created201`
+* ### `Accepted202`
+* ### `BadRequest400`
+* ### `Unauthorized401`
+* ### `Forbidden403`
+* ### `NotFound404`
+* ### `NotAllowed405`
+* ### `NotAcceptable406`
+* ### `InternalError500`
+* ### `ServiceUnavailable503`
 ***
 ## API Details - Adding Functions to the `response` Object:
 
