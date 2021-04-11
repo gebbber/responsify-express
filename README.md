@@ -44,27 +44,27 @@ function mySettingsRoute(req, res, next) {
     })
     .catch((err)=>{
 
-        res.InternalServerError500(err);
+        res.InternalError500(err);
 
     });
 
 }
 ```
 ***
-## Quick Start: Functions Names for the Most Common Responses:
-* ### `Ok200`
-* ### `Created201`
-* ### `Accepted202`
-* ### `BadRequest400`
-* ### `Unauthorized401`
-* ### `Forbidden403`
-* ### `NotFound404`
-* ### `NotAllowed405`
-* ### `NotAcceptable406`
-* ### `InternalError500`
-* ### `ServiceUnavailable503`
+## Quick Start: Function Names for Common Responses:
+* ### `Ok200()`
+* ### `Created201()`
+* ### `Accepted202()`
+* ### `BadRequest400()`
+* ### `Unauthorized401()`
+* ### `Forbidden403()`
+* ### `NotFound404()`
+* ### `NotAllowed405()`
+* ### `NotAcceptable406()`
+* ### `InternalError500()`
+* ### `ServiceUnavailable503()`
 ***
-## API Details - Adding Functions to the `response` Object:
+## API Details - Adding Functions to the '`response`' Object:
 
 When '`responsify`' is used as Express middleware, it imports and adds the entire set of functions to the '`response`' object:
 ```javascript
@@ -73,18 +73,27 @@ const { responsify } = require('responsify-express');
 app.use(responsify);
 ```
 
-Functions added to the response object take the form `MessageDescNNN`, where:
-### `res.MessageDescNNN([payload])`
-* `MessageDesc` is a description of the HTTP status code; all functions are named in PascalCase
-* `NNN` is the HTTP status code; the status code will be helpful as a quick reference when you're writing the front end, and will help you to memorize the codes quickly
+Functions added to the response object take the form `MessageDescription###`, where:
+### `res.MessageDescription###([payload])`
+* `MessageDescription` is a description of the HTTP status code; all functions are named in PascalCase
+* `###` is the HTTP status code; the status code will be helpful for quick reference when you're writing the front end, and will help you to memorize the codes quickly
 * `payload` is an optional payload to be sent
 
-### For `payload`:
+### For optional `payload`:
 * If `payload` is an object or array (evaluated using `typeof payload === 'object'`), then it is sent as JSON using `res.json(payload)`.
 * If `payload` is falsey, then an empty response is sent using `res.end()`.
-* Otherwise, the value is sent as a string using `res.send(String(payload))`. (Non-string forms are thus coerced into a string.)
+* Otherwise, the value is sent as a string using `res.send(String(payload))`. (Non-string forms are thus coerced into strings.)
 
-When used from the `res` response object, the functions must be *executed* to work.
+**Note:** When used from the '`res`' response object, **the functions must be executed to work**.
+
+```javascript
+function myRoute(req, res, next) {
+   res.NotFound404("Not found"); //These both
+   res.NotFound404();            //work.
+
+   res.NotFound404; //doesn't work!
+}
+```
 
 ***
 ## API Details - Use of Functions as Express Middleware:
@@ -105,7 +114,7 @@ Functions can then be passed to Express's `app.METHOD`, `router.METHOD`, `app.us
 ```javascript
 // These are equivalent:
 app.get('/', NotFound404());
-app.get('/', NotFound404); 
+app.get('/', NotFound404); //works here!
 ```
 
 ***
