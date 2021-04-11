@@ -1,6 +1,6 @@
 {
   "name": "responsify-express",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Response middleware and helper functions for Express JS",
   "main": "index.js",
   "scripts": {
