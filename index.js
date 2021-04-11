@@ -70,7 +70,7 @@ for (const key in functions) {
 
 }
 
-// app.use(responseSenders);
+// app.use(responsify);
 const responsify = (req, res, next) => {
     for (const sender in senders) {
         res[sender] = (payload) => {senders[sender](res, payload);};

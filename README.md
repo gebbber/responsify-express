@@ -1,6 +1,6 @@
 # responsify-express
 
-Helper functions to provide text, JSON, and empty responses in Express JS
+Response functions to provide text, JSON, and empty responses in Express JS
 
 ## Quick Start: Basic Use, as Middleware Functions:
 
@@ -8,22 +8,22 @@ Helper functions to provide text, JSON, and empty responses in Express JS
 // Import the needed middleware functions:
 const { Ok200, NotFound404, Unauthorized401 } = require('responsify-express');
 
-// Next pass a string to the functions to send the string as-is:
+// Next pass strings to the functions to send the strings as strings:
 app.get('/', Ok200('<p>Welcome to the very short homepage</p>'));
 
-// Or send an object (or array) as JSON:
+// Or send objects (or arrays) as JSON:
 app.get('/settings', Ok200(mySettingsObject));
 
-// Or send an empty response by executing the functions with no arguments:
+// Or send empty responses by executing the functions with no arguments:
 app.get('/unimplemented', NotFound404())
 
-// ...or don't even execute it, just pass it in:
+// ...or don't even execute them, just pass them in:
 app.get('/admin', Unauthorized401);
 ```
 ***
-## Quick Start: Basic Use, as Response Helper Functions in Routes:
+## Quick Start: Basic Use in Route Definitions:
 
-Import '`responsify`' and then '`app.use`' it before any routes that will use the helper functions:
+Import '`responsify`' and then '`app.use`' it before any routes that will use the response functions:
 ```javascript
 const { responsify } = require('responsify-express');
 
