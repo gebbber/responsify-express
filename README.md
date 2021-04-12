@@ -99,10 +99,10 @@ function myRoute(req, res, next) {
     res.NotFound404('Content not found'); // Add error message
     res.NotFound404({err: caughtError}); // Add error object
     
-    res.NotFound404(""); //These both send empty responses with
-    res.NotFound404();   //a 404 status code.
+    res.NotFound404(""); // These both send empty responses with
+    res.NotFound404();   // a 404 status code.
 
-    res.NotFound404; //doesn't work! (works only when used as middleware)
+    res.NotFound404; // Doesn't work! (works only when used as middleware)
 
 }
 ```
