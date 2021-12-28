@@ -17,6 +17,9 @@ app.get('/settings', Ok200(mySettingsObject));
 // Or send empty responses by executing the functions with no arguments:
 app.get('/unimplemented', NotFound404())
 
+// Or provide an Error object: 
+app.get('/bad-route', NotAuthorized401(Error('Bad Route!'))) //sends JSON: {"error": "Bad Route!"}
+
 // ...or don't even execute them, just pass them in:
 app.get('/admin', Unauthorized401);
 ```

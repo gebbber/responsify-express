@@ -64,6 +64,7 @@ for (const key in functions) {
     senders[key+functions[key]] = (res, payload) => {
         res.status(functions[key]);
         if (!payload) res.end();
+        else if (payload instanceof Error) res.json({error: payload.message});
         else if (typeof payload === 'object') res.json(payload);
         else res.send(String(payload));
     };
